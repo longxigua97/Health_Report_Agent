@@ -3,14 +3,40 @@ from typing import Set
 from langchain_core.tools import tool
 from tools.pdf_report_generator import generate_pdf_report
 
+try:
+    from sentence_transformers import CrossEncoder
+except Exception:  # pragma: no cover
+    CrossEncoder = None
+
 db = None
 health_db = None
+_cross_encoder = None
+
+# 多言語対応の Cross-Encoder を使用して、クエリと文書の関連度を再スコアリングする
+RERANK_MODEL_NAME = "BAAI/bge-reranker-v2-m3"
+RERANK_TOP_K = 3
+RERANK_CANDIDATE_K = 8
 
 
 def init_db(db_instance, health_db_instance):
     global db, health_db
     db = db_instance
     health_db = health_db_instance
+
+
+def _get_cross_encoder():
+    global _cross_encoder
+    if _cross_encoder is not None:
+        return _cross_encoder
+
+    if CrossEncoder is None:
+        return None
+
+    try:
+        _cross_encoder = CrossEncoder(RERANK_MODEL_NAME)
+    except Exception:
+        _cross_encoder = None
+    return _cross_encoder
 
 
 # 検索用に文字列を正規化する
@@ -67,6 +93,26 @@ def _rerank_by_keywords(docs: list, query: str, top_k: int) -> list:
     return [x[2] for x in scored[:top_k]]
 
 
+def _rerank_by_cross_encoder(docs: list, query: str, top_k: int) -> list:
+    """Cross-Encoder による意味的reranking"""
+    if not docs:
+        return []
+
+    reranker = _get_cross_encoder()
+    if reranker is None:
+        return _rerank_by_keywords(docs, query, top_k)
+
+    pairs = [(query, getattr(doc, "page_content", "")) for doc in docs]
+    scores = reranker.predict(pairs)
+
+    scored_docs = sorted(
+        zip(scores, docs),
+        key=lambda x: x[0],
+        reverse=True,
+    )
+    return [doc for _, doc in scored_docs[:top_k]]
+
+
 @tool
 def search_kb(query: str) -> str:
     """健康診断結果に対する評価、評価の基準値および項目の説明を検索するツール
@@ -108,10 +154,10 @@ def search_health_info(query: str) -> str:
     Returns:
         str: 健康改善に関する情報
     """
-    docs = health_db.similarity_search(query, k=8)
-    ranked_docs = _rerank_by_keywords(docs, query, top_k=4)
+    docs = health_db.similarity_search(query, k=RERANK_CANDIDATE_K)
+    ranked_docs = _rerank_by_cross_encoder(docs, query, top_k=RERANK_TOP_K)
     
-    if not docs:
+    if not ranked_docs:
         return "関連情報が見つかりませんでした。"
     
     result = "【健康情報データベース検索結果】\n\n"

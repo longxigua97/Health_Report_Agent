@@ -2,7 +2,7 @@ from typing import Any
 import time
 from pydantic import BaseModel, Field
 from langchain.agents import create_agent
-from tools import search_kb
+from tools.RAG_search_tools import search_kb
 
 # 健康検査診断の構造化出力
 class PersonInfo(BaseModel):

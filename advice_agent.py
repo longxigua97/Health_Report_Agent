@@ -2,7 +2,7 @@ from typing import Any
 import time
 from pydantic import BaseModel, Field
 from langchain.agents import create_agent
-from Health_Report_Agent.tools.RAG_search_tools import search_health_info
+from tools.RAG_search_tools import search_health_info
 
 
 # 健康アドバイスの構造化出力

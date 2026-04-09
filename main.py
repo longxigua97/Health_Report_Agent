@@ -7,9 +7,7 @@ from langchain_chroma import Chroma
 from tools.ocr_utils import extract_health_report_json_auto
 from eval_agent import create_eval_agent, evaluate_exam_results
 from advice_agent import create_advice_agent, format_questionnaire_for_prompt, generate_cd_advices
-from Health_Report_Agent.tools.RAG_search_tools import generate_analysis_pdf, init_db
-
-
+from tools.RAG_search_tools import generate_analysis_pdf, init_db
 
 # 環境変数からAPIキーを読み込む
 load_dotenv()
@@ -20,7 +18,7 @@ model = init_chat_model("openai:gpt-4o-mini", api_key=OPENAI_API_KEY)
 vision_model = init_chat_model("openai:gpt-4o", api_key=OPENAI_API_KEY)
 
 # RAG データベースの初期化
-db_path = "/home/shambhala/Agent/Health_Report_Agent/Chroma-db-json"
+db_path = "/home/shambhala/Agent/Health_Report_Agent/chroma-db-json"
 health_db_path = "/home/shambhala/Agent/Health_Report_Agent/chroma_db_健康資料"
 embeddings = HuggingFaceEmbeddings(model_name="intfloat/multilingual-e5-base")
 
@@ -31,7 +29,6 @@ db = Chroma(
 health_db = Chroma(
     persist_directory=health_db_path,
     embedding_function=embeddings,
-    collection_name="web_png_rag"
 )
 
 init_db(db, health_db)

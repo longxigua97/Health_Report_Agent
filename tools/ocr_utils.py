@@ -9,7 +9,7 @@ from langchain_core.messages import HumanMessage
 from langchain_core.tools import tool
 from pdf2image import convert_from_path
 
-from structuring_utils import (
+from tools.structuring_utils import (
     OCRHealthReport,
     build_structured_json_from_ocr,
     build_structured_json_from_text,
