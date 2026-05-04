@@ -49,9 +49,9 @@ C・Dと判定された要注意項目に対し、専門的な健康情報デー
 </p>
 
 > **RAGソースデータ:**
->1. [国立保健医療科学院 特定健診・特定保健指導に関する教材](https://www.niph.go.jp/soshiki/jinzai/koroshoshiryo/kyozai/) 
->2. [大正製薬 健康診断の結果の見方](https://www.taisho-kenko.com/special/kenshin-guide/qa03/)
->3. [全国健康保険協会 健診結果の見方](https://www.kyoukaikenpo.or.jp/g4/cat410/sb4020/10kajyou/)
+>1. [大正製薬 健康診断の結果の見方(WEB)](https://www.taisho-kenko.com/special/kenshin-guide/qa03/)
+>2. [全国健康保険協会 健診結果の見方(WEB)](https://www.kyoukaikenpo.or.jp/g4/cat410/sb4020/10kajyou/)
+>3. [名古屋市医者会健診センター　健診結果を活かして生活改善(WEB)](https://www.nagoya-med.jp/improvement.html)
 
 ## 3. 精度向上と信頼性への工夫
 
@@ -83,7 +83,7 @@ C・Dと判定された要注意項目に対し、専門的な健康情報デー
 ## 6. 導入効果と今後の課題
 
 ### 導入効果
-- **圧倒的なコストパフォーマンス**: 1回の分析にかかるAPIコストは**約0.04ドル（約6円）**程度です。
+- **圧倒的なコストパフォーマンス**: 1回の分析にかかるAPIコストは **約0.04ドル（約6円）** 程度です。
 - **迅速なフィードバック**: 専門的な分析と個別アドバイスを即座に提供し、受診者の健康意識向上を支援します。
 
 ### 今後の課題 (Todo)
